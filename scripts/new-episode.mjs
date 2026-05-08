@@ -237,9 +237,9 @@ export default async function EpisodeRoute({ params }: any) {
   pubDate: '${pubDate}',
   duration: '${duration}',
   durationSeconds: ${durationSeconds},
-${guestsField}  audioUrl: '${audioUrl}',
+${guestsField}  audioUrl: '${audioUrl.replace(/'/g, "\\'")}',
   audioSizeBytes: ${audioInfo.sizeBytes},
-  audioMimeType: '${audioInfo.contentType}',
+  audioMimeType: '${audioInfo.contentType.replace(/'/g, "\\'")}',
 ${blueskyField}}
 
 # ${title}
@@ -265,9 +265,9 @@ Show notes go here…
     pubDate: '${pubDate}',
     duration: '${duration}',
     durationSeconds: ${durationSeconds},
-${guests.length ? `    guests: [${guests.map((g) => `'${g.replace(/'/g, "\\'")}'`).join(', ')}],\n` : ''}    audioUrl: '${audioUrl}',
+${guests.length ? `    guests: [${guests.map((g) => `'${g.replace(/'/g, "\\'")}'`).join(', ')}],\n` : ''}    audioUrl: '${audioUrl.replace(/'/g, "\\'")}',
     audioSizeBytes: ${audioInfo.sizeBytes},
-    audioMimeType: '${audioInfo.contentType}',
+    audioMimeType: '${audioInfo.contentType.replace(/'/g, "\\'")}',
     hasTranscript: true,
 ${blueskyPostUrl ? `    blueskyPostUrl: '${blueskyPostUrl.replace(/'/g, "\\'")}',\n` : ''}  },`
 
