@@ -23,6 +23,11 @@ const ITUNES_NS = 'http://www.itunes.com/dtds/podcast-1.0.dtd'
 const CONTENT_NS = 'http://purl.org/rss/1.0/modules/content/'
 const ATOM_NS = 'http://www.w3.org/2005/Atom'
 
+interface RenderCtx {
+  show: ShowMeta
+  origin: string
+}
+
 function xmlEscape(s: string): string {
   return s
     .replace(/&/g, '&amp;')
@@ -40,7 +45,11 @@ function cdataSafe(html: string): string {
 function toRfc822(isoDate: string): string {
   // RSS <pubDate> uses RFC 822 dates. JS toUTCString() is RFC 1123,
   // which is RFC 822-compatible for podcatchers.
-  return new Date(isoDate).toUTCString()
+  const d = new Date(isoDate)
+  if (Number.isNaN(d.getTime())) {
+    throw new Error(`podcast-feed: invalid pubDate ${JSON.stringify(isoDate)}`)
+  }
+  return d.toUTCString()
 }
 
 function episodeGuid(episode: Episode): string {
@@ -52,13 +61,20 @@ function episodeUrl(show: ShowMeta, episode: Episode): string {
   return `${show.siteUrl}/${episode.slug}`
 }
 
-function renderItem(show: ShowMeta, episode: FeedEpisode): string {
+function renderItem(ctx: RenderCtx, episode: FeedEpisode): string {
+  if (!Number.isInteger(episode.audioSizeBytes) || episode.audioSizeBytes <= 0) {
+    throw new Error(
+      `podcast-feed: ep ${episode.episodeNumber} has invalid audioSizeBytes (${episode.audioSizeBytes})`,
+    )
+  }
+
+  const { show, origin } = ctx
   const mime = episode.audioMimeType ?? 'audio/mpeg'
   const cover = episode.coverImage
     ? episode.coverImage.startsWith('http')
       ? episode.coverImage
-      : `https://atproto.com${episode.coverImage}`
-    : `https://atproto.com${show.coverImage}`
+      : `${origin}${episode.coverImage}`
+    : `${origin}${show.coverImage}`
 
   return `    <item>
       <title>${xmlEscape(episode.title)}</title>
@@ -77,7 +93,14 @@ function renderItem(show: ShowMeta, episode: FeedEpisode): string {
 }
 
 export function buildPodcastFeed(show: ShowMeta, episodes: FeedEpisode[]): string {
-  const items = episodes.map((e) => renderItem(show, e)).join('\n')
+  const normalizedShow: ShowMeta = {
+    ...show,
+    siteUrl: show.siteUrl.replace(/\/$/, ''),
+  }
+  const origin = new URL(normalizedShow.siteUrl).origin
+  const ctx: RenderCtx = { show: normalizedShow, origin }
+
+  const items = episodes.map((e) => renderItem(ctx, e)).join('\n')
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"
@@ -85,20 +108,20 @@ export function buildPodcastFeed(show: ShowMeta, episodes: FeedEpisode[]): strin
      xmlns:content="${CONTENT_NS}"
      xmlns:atom="${ATOM_NS}">
   <channel>
-    <title>${xmlEscape(show.title)}</title>
-    <link>${xmlEscape(show.siteUrl)}</link>
-    <description>${xmlEscape(show.description)}</description>
-    <language>${xmlEscape(show.language)}</language>
-    <itunes:author>${xmlEscape(show.author)}</itunes:author>
+    <title>${xmlEscape(normalizedShow.title)}</title>
+    <link>${xmlEscape(normalizedShow.siteUrl)}</link>
+    <description>${xmlEscape(normalizedShow.description)}</description>
+    <language>${xmlEscape(normalizedShow.language)}</language>
+    <itunes:author>${xmlEscape(normalizedShow.author)}</itunes:author>
     <itunes:owner>
-      <itunes:name>${xmlEscape(show.author)}</itunes:name>
-      <itunes:email>${xmlEscape(show.ownerEmail)}</itunes:email>
+      <itunes:name>${xmlEscape(normalizedShow.author)}</itunes:name>
+      <itunes:email>${xmlEscape(normalizedShow.ownerEmail)}</itunes:email>
     </itunes:owner>
-    <itunes:image href="${xmlEscape(show.coverImage.startsWith('http') ? show.coverImage : `https://atproto.com${show.coverImage}`)}"/>
-    <itunes:category text="${xmlEscape(show.category)}"/>
+    <itunes:image href="${xmlEscape(normalizedShow.coverImage.startsWith('http') ? normalizedShow.coverImage : `${origin}${normalizedShow.coverImage}`)}"/>
+    <itunes:category text="${xmlEscape(normalizedShow.category)}"/>
     <itunes:explicit>false</itunes:explicit>
     <itunes:type>episodic</itunes:type>
-    <atom:link href="${xmlEscape(show.feedUrl)}" rel="self" type="application/rss+xml"/>
+    <atom:link href="${xmlEscape(normalizedShow.feedUrl)}" rel="self" type="application/rss+xml"/>
 ${items}
   </channel>
 </rss>
