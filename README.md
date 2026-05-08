@@ -285,6 +285,73 @@ Requires `ATPROTO_HANDLE` and `ATPROTO_APP_PASSWORD` in `.env`. The authenticate
 
 ---
 
+### Off Protocol (Podcast)
+
+The site hosts the *Off Protocol* podcast at `/off-protocol`. Episodes follow the same MDX-per-directory pattern as the blog, with podcast-specific additions: native `<audio>` playback, optional transcripts, an RSS feed for podcatchers, and subscribe links.
+
+#### Add an episode
+
+```sh
+npm run podcast create
+```
+
+Prompts for title, slug, episode number, description, audio URL, guests, and an optional Bluesky discussion link. The script HEADs the audio URL (failing if unreachable) and probes its duration via `ffprobe` if installed (falling back to a manual prompt). It scaffolds:
+
+- `src/app/[locale]/off-protocol/<slug>/page.tsx`
+- `src/app/[locale]/off-protocol/<slug>/en.mdx` (show notes)
+- `src/app/[locale]/off-protocol/<slug>/transcript.mdx` (optional transcript stub)
+
+…and prepends a new entry to `src/lib/episodes.ts`.
+
+To remove an episode:
+
+```sh
+npm run podcast remove
+```
+
+This deletes local files only. Once a feed `guid` has been distributed to subscribers, you cannot retroactively unsubscribe them — be deliberate.
+
+#### Why two date fields and two duration fields
+
+`src/lib/episodes.ts` stores both `date` (`"May 7, 2026"`) and `pubDate` (ISO 8601), and both `duration` (`"HH:MM:SS"`) and `durationSeconds` (a number). This is deliberate:
+
+- Display formats and machine formats serve different consumers.
+- Deriving one from the other at render time means re-parsing on every page load and risks subtle locale bugs.
+- The RSS spec wants specific formats (`pubDate` in RFC 822, `<itunes:duration>` in `HH:MM:SS`).
+
+The `npm run podcast create` script populates both fields in sync. They cannot drift unless edited by hand.
+
+#### Pre-launch checklist
+
+Things that must be filled in **before** submitting the feed to Apple Podcasts or Spotify. Search the codebase for `TODO(launch)` to find each one in context:
+
+- [ ] `SHOW.description` — real show description in `src/lib/episodes.ts`
+- [ ] `SHOW.ownerEmail` — real email; Apple rejects feeds without one
+- [ ] `SHOW.coverImage` — replace `/off-protocol/cover.svg` with a square JPEG/PNG between 1400×1400 and 3000×3000 (and update the `SHOW.coverImage` path)
+- [ ] `SHOW.language` — currently `'en-us'`; BCP 47 conventions prefer `'en-US'`
+- [ ] At least one episode added via `npm run podcast create`
+
+#### RSS feed validation
+
+Before announcing the show or submitting to directories:
+
+1. Run `npm run dev` and visit `http://localhost:3000/off-protocol/rss.xml`
+2. Validate against [validator.podcastindex.org](https://validator.podcastindex.org/) and [castfeedvalidator.com](https://castfeedvalidator.com/) — both must pass
+3. Subscribe to the local feed in Pocket Casts (it accepts arbitrary URLs) and confirm episodes appear with art, duration, and show notes
+4. Confirm audio plays from each episode page on desktop and mobile
+
+#### Post-launch: subscribe links
+
+Once Apple/Spotify/Overcast/Pocket Casts have ingested the feed (typically 24–72h after submission), populate the corresponding URLs in `SHOW.subscribe` in `src/lib/episodes.ts`. The `SubscribeLinks` component renders a button only for non-null entries — at launch only RSS and the generic `podcast://` link are populated.
+
+#### GUID stability
+
+Episode RSS GUIDs are `off-protocol-ep-<episodeNumber>` and **must never change**. Slugs may be renamed; GUIDs may not. Renaming a GUID makes every podcatcher re-download the episode as new.
+
+The feed builder validates inputs at render time — invalid `pubDate` or `audioSizeBytes` will throw rather than emit a malformed feed.
+
+---
+
 ### Are you a developer interested in building on atproto?
 
 Bluesky is an open social network built on the AT Protocol, a flexible technology that will never lock developers out of the ecosystems that they help build. With atproto, third-party can be as seamless as first-party through custom feeds, federated services, clients, and more.
