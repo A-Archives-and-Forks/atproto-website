@@ -323,12 +323,8 @@ The `npm run podcast create` script populates both fields in sync. They cannot d
 
 #### Pre-launch checklist
 
-Things that must be filled in **before** submitting the feed to Apple Podcasts or Spotify. Search the codebase for `TODO(launch)` to find each one in context:
+Things that must happen **before** submitting the feed to Apple Podcasts or Spotify:
 
-- [ ] `SHOW.description` — real show description in `src/lib/episodes.ts`
-- [ ] `SHOW.ownerEmail` — real email; Apple rejects feeds without one
-- [ ] `SHOW.coverImage` — replace `/off-protocol/cover.svg` with a square JPEG/PNG between 1400×1400 and 3000×3000 (and update the `SHOW.coverImage` path)
-- [ ] `SHOW.language` — currently `'en-us'`; BCP 47 conventions prefer `'en-US'`
 - [ ] At least one episode added via `npm run podcast create`
 
 #### RSS feed validation

@@ -56,9 +56,6 @@ export interface ShowMeta {
   subscribe: SubscribeUrls
 }
 
-// TODO(launch): Replace placeholder description and ownerEmail before
-// submitting the feed to Apple Podcasts. Apple rejects feeds without a
-// real owner email.
 export const SHOW: ShowMeta = {
   title: 'Off Protocol',
   description: 'Conversations about AT Protocol and the open social web with the people working to build a better internet. Brought to you by the Bluesky DevRel team.',
@@ -67,7 +64,7 @@ export const SHOW: ShowMeta = {
   ownerEmail: 'hello+atproto@blueskyweb.xyz',
   language: 'en-US',
   category: 'Technology',
-  coverImage: '/off-protocol/cover.svg', // TODO(launch): replace with .jpg, ≥1400×1400
+  coverImage: 'https://media.atproto.com/off-protocol/off-protocol-cover.png',
   feedUrl: 'https://atproto.com/off-protocol/rss.xml',
   siteUrl: 'https://atproto.com/off-protocol',
   subscribe: {
