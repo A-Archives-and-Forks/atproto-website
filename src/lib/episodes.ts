@@ -94,6 +94,23 @@ export const SHOW: ShowMeta = {
 
 export const episodes: Episode[] = [
   {
+    slug: 'the-puppy-problem',
+    episodeNumber: 5,
+    title: 'The Puppy Problem',
+    description:
+      'Jim and Alex are live with the first live episode under the new Off Protocol name. Protocol meetups are happening everywhere, Alex and Jim were both in Portland, the Ozone moderation tool has some new features, and Bluesky is considering an edit button. Plus a few of your questions.',
+    date: 'May 15, 2026',
+    pubDate: '2026-05-15T12:00:00Z',
+    duration: '00:33:08',
+    durationSeconds: 1988,
+    host: 'Jim Ray and Alex Garnett',
+    audioUrl: 'https://media.atproto.com/off-protocol/20260515-live/2026-05-15-off-protocol-live.mp3',
+    audioSizeBytes: 63624960,
+    audioMimeType: 'audio/mpeg',
+    hasShowNotes: false,
+    hasTranscript: false,
+  },
+  {
     slug: 'why-a-new-protocol-the-history-and-future-of-at-protocol',
     episodeNumber: 4,
     title: 'Why a New Protocol? The History and Future of AT Protocol',
