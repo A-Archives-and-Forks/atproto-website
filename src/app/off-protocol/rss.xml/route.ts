@@ -35,7 +35,17 @@ async function loadEpisodeContentHtml(slug: string): Promise<string> {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  // Derive siteUrl / feedUrl from the incoming request so local dev and
+  // preview deploys generate a feed that self-references the right host.
+  // In production this resolves to atproto.com automatically.
+  const origin = new URL(request.url).origin
+  const show = {
+    ...SHOW,
+    siteUrl: `${origin}/off-protocol`,
+    feedUrl: `${origin}/off-protocol/rss.xml`,
+  }
+
   const feedEpisodes: FeedEpisode[] = await Promise.all(
     episodes.map(async (e) => ({
       ...e,
@@ -43,7 +53,7 @@ export async function GET() {
     })),
   )
 
-  const xml = buildPodcastFeed(SHOW, feedEpisodes)
+  const xml = buildPodcastFeed(show, feedEpisodes)
 
   return new Response(xml, {
     status: 200,

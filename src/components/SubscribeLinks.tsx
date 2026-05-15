@@ -1,5 +1,6 @@
 // src/components/SubscribeLinks.tsx
 import clsx from 'clsx'
+import { headers } from 'next/headers'
 import { SHOW, type SubscribeUrls } from '@/lib/episodes'
 
 interface ServiceConfig {
@@ -7,8 +8,8 @@ interface ServiceConfig {
   label: string
 }
 
-// Order matters: most-popular first. RSS and Generic always show because
-// they're populated at launch; the rest light up after directory ingestion.
+// Order matters: most-popular first. Directory entries (apple/spotify/etc.)
+// light up after their respective directories ingest the feed.
 const SERVICES: ServiceConfig[] = [
   { key: 'apple', label: 'Apple Podcasts' },
   { key: 'spotify', label: 'Spotify' },
@@ -18,8 +19,24 @@ const SERVICES: ServiceConfig[] = [
   { key: 'generic', label: 'Subscribe' },
 ]
 
+// Derive subscribe URLs whose scheme depends on the host the request hit.
+// Lets the Subscribe button work on localhost and preview deploys without
+// editing SHOW.subscribe — production still resolves to atproto.com.
+function deriveDynamicUrls(): Partial<Record<keyof SubscribeUrls, string>> {
+  const h = headers()
+  const host = h.get('host')
+  if (!host) return {}
+  return {
+    generic: `podcast://${host}/off-protocol/rss.xml`,
+  }
+}
+
 export function SubscribeLinks({ className }: { className?: string }) {
-  const links = SERVICES.map((s) => ({ ...s, href: SHOW.subscribe[s.key] })).filter(
+  const dynamic = deriveDynamicUrls()
+  const links = SERVICES.map((s) => ({
+    ...s,
+    href: dynamic[s.key] ?? SHOW.subscribe[s.key],
+  })).filter(
     (s): s is ServiceConfig & { href: string } => Boolean(s.href),
   )
 

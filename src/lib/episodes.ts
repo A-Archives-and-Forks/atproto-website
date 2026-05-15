@@ -38,7 +38,7 @@ export interface SubscribeUrls {
   spotify: string | null
   overcast: string | null
   pocketcasts: string | null
-  rss: string
+  rss: string | null
   generic: string
 }
 
@@ -72,7 +72,7 @@ export const SHOW: ShowMeta = {
     spotify: null,              // TODO(post-launch): fill in after Spotify ingestion
     overcast: null,             // TODO(post-launch): fill in after Overcast ingestion
     pocketcasts: null,          // TODO(post-launch): fill in after PocketCasts ingestion
-    rss: 'https://atproto.com/off-protocol/rss.xml',
+    rss: null,
     generic: 'podcast://atproto.com/off-protocol/rss.xml',
   },
 }
