@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "blog": "tsx --env-file=.env scripts/blog.mjs",
+    "podcast": "tsx --env-file=.env scripts/podcast.mjs",
     "pages:build": "npx @cloudflare/next-on-pages",
     "preview": "npm run pages:build && wrangler pages dev",
     "deploy": "npm run pages:build && wrangler pages deploy"
@@ -44,6 +45,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-highlight-words": "^0.20.0",
+    "rehype-stringify": "^10.0.1",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.0",
     "remark-mdx": "^3.0.0",
