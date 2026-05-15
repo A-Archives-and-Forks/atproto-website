@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { episodes, SHOW } from '@/lib/episodes'
 import { SubscribeLinks } from '@/components/SubscribeLinks'
 
@@ -24,24 +23,14 @@ export const metadata = {
 export default async function OffProtocolIndexPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-16">
-      <header className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-start">
-        <Image
-          src={SHOW.coverImage}
-          alt={`${SHOW.title} cover art`}
-          width={160}
-          height={160}
-          className="h-32 w-32 flex-shrink-0 rounded-lg sm:h-40 sm:w-40"
-          unoptimized
-        />
-        <div className="flex flex-col gap-4">
-          <h1 className="font-mono text-4xl font-bold uppercase tracking-tight md:text-5xl">
-            {SHOW.title}
-          </h1>
-          <p className="text-lg text-zinc-600 dark:text-zinc-400">
-            {SHOW.description}
-          </p>
-          <SubscribeLinks />
-        </div>
+      <header className="mb-12 flex flex-col gap-4">
+        <h1 className="font-mono text-4xl font-bold uppercase tracking-tight md:text-5xl">
+          {SHOW.title}
+        </h1>
+        <p className="text-lg text-zinc-600 dark:text-zinc-400">
+          {SHOW.description}
+        </p>
+        <SubscribeLinks />
       </header>
 
       {episodes.length === 0 ? (
