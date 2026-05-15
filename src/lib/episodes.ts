@@ -79,6 +79,22 @@ export const SHOW: ShowMeta = {
 
 export const episodes: Episode[] = [
   {
+    slug: 'slowly-then-quickly-what-atmosphereconf-made-visible',
+    episodeNumber: 2,
+    title: 'Slowly, Then Quickly: What AtmosphereConf Made Visible',
+    description:
+      'With AtmosphereConf 2026 wrapped, Boris Mann and Ted Han join to talk about what the gathering surfaced in the ecosystem. From the IETF working group, the move beyond a single foundation, to a growing layer of co-ops, regional meetups, and independent stewards.',
+    date: 'April 20, 2026',
+    pubDate: '2026-04-20T12:00:00Z',
+    duration: '01:06:09',
+    durationSeconds: 3969,
+    guests: ['Boris Mann', 'Ted Han'],
+    audioUrl: 'https://media.atproto.com/off-protocol/20260410-live/2026-04-10-live-boris-ted.mp3',
+    audioSizeBytes: 127011840,
+    audioMimeType: 'audio/mpeg',
+    hasTranscript: true,
+  },
+  {
     slug: 'a-thousand-prs-in-two-weeks-building-npmx',
     episodeNumber: 1,
     title: 'A Thousand PRs in Two Weeks: Building NPMX',
