@@ -80,6 +80,23 @@ export const SHOW: ShowMeta = {
 
 export const episodes: Episode[] = [
   {
+    slug: 'why-a-new-protocol-the-history-and-future-of-at-protocol',
+    episodeNumber: 4,
+    title: 'Why a New Protocol? The History and Future of AT Protocol',
+    description:
+      "Bluesky CTO Paul Frazee and Head of Protocol Daniel Holmgren join for a wide-ranging conversation about what atproto is, why it exists, how it got built, and where it's going next. From a Twitter consultancy to an IETF working group, this is where to get started.",
+    date: 'May 14, 2026',
+    pubDate: '2026-05-14T12:00:00Z',
+    duration: '00:59:26',
+    durationSeconds: 3566,
+    guests: ['Paul Frazee', 'Daniel Holmgren'],
+    audioUrl: 'https://media.atproto.com/off-protocol/20260524-conversation/2026-05-14-conversation-paul-danny.mp3',
+    audioSizeBytes: 114122496,
+    audioMimeType: 'audio/mpeg',
+    hasShowNotes: false,
+    hasTranscript: false,
+  },
+  {
     slug: 'blacksky-as-a-service-a-first-look-at-acorn',
     episodeNumber: 3,
     title: 'Blacksky As a Service: a First Look at Acorn',
