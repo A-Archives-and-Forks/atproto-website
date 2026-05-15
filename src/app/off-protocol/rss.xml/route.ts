@@ -53,11 +53,21 @@ async function resolveContentHtml(episode: Episode): Promise<string> {
   return loadEpisodeContentHtml(episode.slug)
 }
 
+// Behind a reverse proxy (Render, Cloudflare Pages, Vercel, etc.), the
+// Node process is bound to an internal address while the public hostname
+// arrives via X-Forwarded-Host. Honor that header when present so the feed
+// self-references the public URL rather than the container's localhost.
+function deriveOrigin(request: Request): string {
+  const forwardedHost = request.headers.get('x-forwarded-host')
+  if (forwardedHost) {
+    const proto = request.headers.get('x-forwarded-proto') ?? 'https'
+    return `${proto}://${forwardedHost}`
+  }
+  return new URL(request.url).origin
+}
+
 export async function GET(request: Request) {
-  // Derive siteUrl / feedUrl from the incoming request so local dev and
-  // preview deploys generate a feed that self-references the right host.
-  // In production this resolves to atproto.com automatically.
-  const origin = new URL(request.url).origin
+  const origin = deriveOrigin(request)
   const show = {
     ...SHOW,
     siteUrl: `${origin}/off-protocol`,

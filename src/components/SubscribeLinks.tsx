@@ -19,12 +19,16 @@ const SERVICES: ServiceConfig[] = [
   { key: 'generic', label: 'Subscribe' },
 ]
 
-// Derive subscribe URLs whose scheme depends on the host the request hit.
+// Derive subscribe URLs whose host depends on where the request landed.
 // Lets the Subscribe button work on localhost and preview deploys without
 // editing SHOW.subscribe — production still resolves to atproto.com.
+//
+// Behind a reverse proxy the public hostname arrives in X-Forwarded-Host;
+// the bare Host header would be the internal binding (e.g., localhost:10000
+// on Render). Prefer the forwarded value when present.
 function deriveDynamicUrls(): Partial<Record<keyof SubscribeUrls, string>> {
   const h = headers()
-  const host = h.get('host')
+  const host = h.get('x-forwarded-host') ?? h.get('host')
   if (!host) return {}
   return {
     generic: `podcast://${host}/off-protocol/rss.xml`,
