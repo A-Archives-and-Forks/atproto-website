@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { episodes, SHOW } from '@/lib/episodes'
+import { episodes, formatDurationForDisplay, SHOW } from '@/lib/episodes'
 import { SubscribeLinks } from '@/components/SubscribeLinks'
 
 /**
@@ -49,7 +49,7 @@ export default async function OffProtocolIndexPage() {
                   <span className="font-mono">Episode {episode.episodeNumber}</span>
                   <time>{episode.date}</time>
                   <span aria-hidden="true">·</span>
-                  <span>{episode.duration}</span>
+                  <span>{formatDurationForDisplay(episode.durationSeconds)}</span>
                 </div>
                 <h2 className="mt-2 text-xl font-semibold text-zinc-900 group-hover:text-blue-600 dark:text-white dark:group-hover:text-blue-400">
                   {episode.title}

@@ -61,6 +61,13 @@ function episodeUrl(show: ShowMeta, episode: Episode): string {
   return `${show.siteUrl}/${episode.slug}`
 }
 
+// Resolve a possibly-relative URL against the show's origin. Absolute URLs
+// (e.g., R2-hosted cover art) pass through unchanged; relative paths get
+// prefixed. Important because cover URLs can be either form.
+function absUrl(origin: string, url: string): string {
+  return url.startsWith('http') ? url : `${origin}${url}`
+}
+
 function renderItem(ctx: RenderCtx, episode: FeedEpisode): string {
   if (!Number.isInteger(episode.audioSizeBytes) || episode.audioSizeBytes <= 0) {
     throw new Error(
@@ -70,11 +77,7 @@ function renderItem(ctx: RenderCtx, episode: FeedEpisode): string {
 
   const { show, origin } = ctx
   const mime = episode.audioMimeType ?? 'audio/mpeg'
-  const cover = episode.coverImage
-    ? episode.coverImage.startsWith('http')
-      ? episode.coverImage
-      : `${origin}${episode.coverImage}`
-    : `${origin}${show.coverImage}`
+  const cover = absUrl(origin, episode.coverImage ?? show.coverImage)
 
   return `    <item>
       <title>${xmlEscape(episode.title)}</title>
@@ -117,7 +120,7 @@ export function buildPodcastFeed(show: ShowMeta, episodes: FeedEpisode[]): strin
       <itunes:name>${xmlEscape(normalizedShow.author)}</itunes:name>
       <itunes:email>${xmlEscape(normalizedShow.ownerEmail)}</itunes:email>
     </itunes:owner>
-    <itunes:image href="${xmlEscape(normalizedShow.coverImage.startsWith('http') ? normalizedShow.coverImage : `${origin}${normalizedShow.coverImage}`)}"/>
+    <itunes:image href="${xmlEscape(absUrl(origin, normalizedShow.coverImage))}"/>
     <itunes:category text="${xmlEscape(normalizedShow.category)}"/>
     <itunes:explicit>false</itunes:explicit>
     <itunes:type>episodic</itunes:type>

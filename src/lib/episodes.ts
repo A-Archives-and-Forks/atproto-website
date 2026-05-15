@@ -34,6 +34,20 @@ export interface Episode {
   blueskyPostUrl?: string       // optional Bluesky discussion thread anchor
 }
 
+/**
+ * Format a duration for HTML display: drop the hours field entirely when
+ * the episode is under an hour ("58:45"), and drop the leading zero on the
+ * hour when it's present ("1:06:09"). RSS uses the stored HH:MM:SS string
+ * because the spec wants that format.
+ */
+export function formatDurationForDisplay(seconds: number): string {
+  const h = Math.floor(seconds / 3600)
+  const m = Math.floor((seconds % 3600) / 60)
+  const s = seconds % 60
+  const pad = (n: number) => n.toString().padStart(2, '0')
+  return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${m}:${pad(s)}`
+}
+
 export interface SubscribeUrls {
   apple: string | null
   spotify: string | null
