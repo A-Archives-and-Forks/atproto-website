@@ -80,6 +80,23 @@ export const SHOW: ShowMeta = {
 
 export const episodes: Episode[] = [
   {
+    slug: 'blacksky-as-a-service-a-first-look-at-acorn',
+    episodeNumber: 3,
+    title: 'Blacksky As a Service: a First Look at Acorn',
+    description:
+      "Rishi Balakrishnan joins to talk about the work that went into building Acorn, Blacksky's new platform for creating moderated communities on atproto — and why the landing page never mentions a PDS.",
+    date: 'April 24, 2026',
+    pubDate: '2026-04-24T12:00:00Z',
+    duration: '00:55:55',
+    durationSeconds: 3355,
+    guests: ['Rishi Balakrishnan'],
+    audioUrl: 'https://media.atproto.com/off-protocol/20260424-live/2026-04-24-live-rishi-acorn.mp3',
+    audioSizeBytes: 107389440,
+    audioMimeType: 'audio/mpeg',
+    hasShowNotes: false,
+    hasTranscript: false,
+  },
+  {
     slug: 'slowly-then-quickly-what-atmosphereconf-made-visible',
     episodeNumber: 2,
     title: 'Slowly, Then Quickly: What AtmosphereConf Made Visible',
