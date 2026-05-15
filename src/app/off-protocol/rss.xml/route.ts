@@ -7,7 +7,7 @@
 //      at the bare /off-protocol/rss.xml URL anyway.
 import * as fs from 'fs/promises'
 import * as path from 'path'
-import { episodes, SHOW } from '@/lib/episodes'
+import { episodes, SHOW, type Episode } from '@/lib/episodes'
 import { buildPodcastFeed, type FeedEpisode } from '@/lib/podcast-feed'
 import {
   mdxBodyToHtml,
@@ -35,6 +35,24 @@ async function loadEpisodeContentHtml(slug: string): Promise<string> {
   }
 }
 
+function xmlEscape(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+}
+
+async function resolveContentHtml(episode: Episode): Promise<string> {
+  // When the author hasn't published real show notes yet, fall back to the
+  // episode description so podcatchers still have meaningful copy.
+  if (!episode.hasShowNotes) {
+    return `<p>${xmlEscape(episode.description)}</p>`
+  }
+  return loadEpisodeContentHtml(episode.slug)
+}
+
 export async function GET(request: Request) {
   // Derive siteUrl / feedUrl from the incoming request so local dev and
   // preview deploys generate a feed that self-references the right host.
@@ -49,7 +67,7 @@ export async function GET(request: Request) {
   const feedEpisodes: FeedEpisode[] = await Promise.all(
     episodes.map(async (e) => ({
       ...e,
-      contentHtml: await loadEpisodeContentHtml(e.slug),
+      contentHtml: await resolveContentHtml(e),
     })),
   )
 

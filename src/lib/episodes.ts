@@ -28,7 +28,8 @@ export interface Episode {
   audioSizeBytes: number        // required by RSS <enclosure length="…">
   audioMimeType?: string        // defaults to "audio/mpeg"
   coverImage?: string           // square, ≥1400px; falls back to SHOW.coverImage
-  hasTranscript?: boolean       // true if transcript.mdx exists
+  hasShowNotes?: boolean        // author flips to true when en.mdx body has real content
+  hasTranscript?: boolean       // author flips to true when transcript.mdx has real content
   explicit?: boolean            // RSS <itunes:explicit>; defaults false
   blueskyPostUrl?: string       // optional Bluesky discussion thread anchor
 }
@@ -92,7 +93,8 @@ export const episodes: Episode[] = [
     audioUrl: 'https://media.atproto.com/off-protocol/20260410-live/2026-04-10-live-boris-ted.mp3',
     audioSizeBytes: 127011840,
     audioMimeType: 'audio/mpeg',
-    hasTranscript: true,
+    hasShowNotes: false,
+    hasTranscript: false,
   },
   {
     slug: 'a-thousand-prs-in-two-weeks-building-npmx',
@@ -108,7 +110,8 @@ export const episodes: Episode[] = [
     audioUrl: 'https://media.atproto.com/off-protocol/20260227-live/2026-02-27-npmx-team.mp3',
     audioSizeBytes: 112814592,
     audioMimeType: 'audio/mpeg',
-    hasTranscript: true,
+    hasShowNotes: false,
+    hasTranscript: false,
   },
   // newest first; populate via `npm run podcast create`
 ]

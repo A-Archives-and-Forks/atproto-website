@@ -240,6 +240,9 @@ export default async function EpisodeRoute({ params }: any) {
 ${guestsField}  audioUrl: '${audioUrl.replace(/'/g, "\\'")}',
   audioSizeBytes: ${audioInfo.sizeBytes},
   audioMimeType: '${audioInfo.contentType.replace(/'/g, "\\'")}',
+  // Flip to true once you've written the show notes / transcript below.
+  hasShowNotes: false,
+  hasTranscript: false,
 ${blueskyField}}
 
 # ${title}
@@ -268,7 +271,8 @@ Show notes go here…
 ${guests.length ? `    guests: [${guests.map((g) => `'${g.replace(/'/g, "\\'")}'`).join(', ')}],\n` : ''}    audioUrl: '${audioUrl.replace(/'/g, "\\'")}',
     audioSizeBytes: ${audioInfo.sizeBytes},
     audioMimeType: '${audioInfo.contentType.replace(/'/g, "\\'")}',
-    hasTranscript: true,
+    hasShowNotes: false,
+    hasTranscript: false,
 ${blueskyPostUrl ? `    blueskyPostUrl: '${blueskyPostUrl.replace(/'/g, "\\'")}',\n` : ''}  },`
 
   episodesFile = episodesFile.replace(
@@ -286,8 +290,9 @@ Files:
   - src/app/[locale]/off-protocol/${slug}/transcript.mdx
 
 Next:
-  1. Edit en.mdx with your show notes
-  2. Edit transcript.mdx (or delete it if no transcript)
+  1. Edit en.mdx with your show notes, then flip hasShowNotes: true
+     (in both the MDX header and src/lib/episodes.ts)
+  2. Edit transcript.mdx, then flip hasTranscript: true (same two places)
   3. npm run dev — preview at http://localhost:3000/off-protocol/${slug}
 `)
 }

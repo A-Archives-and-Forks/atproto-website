@@ -15,7 +15,8 @@ interface EpisodePageProps {
    * Header data — same fields as Episode, minus the slug-level concerns.
    * Comes from the MDX module's `header` export.
    */
-  header: EpisodeHeaderProps & Pick<Episode, 'blueskyPostUrl'>
+  header: EpisodeHeaderProps &
+    Pick<Episode, 'blueskyPostUrl' | 'hasShowNotes' | 'hasTranscript'>
   /** Optional default export of a transcript MDX module. */
   Transcript?: React.ComponentType
 }
@@ -25,16 +26,20 @@ export function EpisodePage({ default: Notes, header, Transcript }: EpisodePageP
     <article className="mx-auto max-w-4xl px-4 py-12">
       <EpisodeHeader {...header} />
 
-      <section className="mt-12">
-        <h2 className="font-mono text-sm font-medium uppercase tracking-wide text-zinc-700 dark:text-zinc-300">
-          Show notes
-        </h2>
-        <Prose className="mt-4">
-          <Notes />
-        </Prose>
-      </section>
+      {header.hasShowNotes && (
+        <section className="mt-12">
+          <h2 className="font-mono text-sm font-medium uppercase tracking-wide text-zinc-700 dark:text-zinc-300">
+            Show notes
+          </h2>
+          <Prose className="mt-4">
+            <Notes />
+          </Prose>
+        </section>
+      )}
 
-      {Transcript && <EpisodeTranscript Transcript={Transcript} />}
+      {Transcript && header.hasTranscript && (
+        <EpisodeTranscript Transcript={Transcript} />
+      )}
 
       {header.blueskyPostUrl && (
         <div className="mt-12">
