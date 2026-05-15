@@ -61,11 +61,11 @@ export interface ShowMeta {
 // real owner email.
 export const SHOW: ShowMeta = {
   title: 'Off Protocol',
-  description: 'TODO(launch): show description',
-  author: 'AT Protocol Team',
+  description: 'Conversations about AT Protocol and the open social web with the people working to build a better internet. Brought to you by the Bluesky DevRel team.',
+  author: 'Bluesky DevRel',
   defaultHost: 'Jim Ray',
-  ownerEmail: 'TODO(launch): owner@example.com',
-  language: 'en-us',
+  ownerEmail: 'hello+atproto@blueskyweb.xyz',
+  language: 'en-US',
   category: 'Technology',
   coverImage: '/off-protocol/cover.svg', // TODO(launch): replace with .jpg, ≥1400×1400
   feedUrl: 'https://atproto.com/off-protocol/rss.xml',
