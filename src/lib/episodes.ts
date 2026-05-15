@@ -78,5 +78,21 @@ export const SHOW: ShowMeta = {
 }
 
 export const episodes: Episode[] = [
+  {
+    slug: 'a-thousand-prs-in-two-weeks-building-npmx',
+    episodeNumber: 1,
+    title: 'A Thousand PRs in Two Weeks: Building NPMX',
+    description:
+      'Daniel Roe, Matias Capeletto, and Zeu join to discuss how their frustration with JavaScript packaging went from a Bluesky post to one of the most successful new community-led projects on the protocol.',
+    date: 'February 27, 2026',
+    pubDate: '2026-02-27T12:00:00Z',
+    duration: '00:58:45',
+    durationSeconds: 3525,
+    guests: ['Daniel Roe', 'Matias Capeletto', 'Zeu'],
+    audioUrl: 'https://media.atproto.com/off-protocol/20260227-live/2026-02-27-npmx-team.mp3',
+    audioSizeBytes: 112814592,
+    audioMimeType: 'audio/mpeg',
+    hasTranscript: true,
+  },
   // newest first; populate via `npm run podcast create`
 ]
